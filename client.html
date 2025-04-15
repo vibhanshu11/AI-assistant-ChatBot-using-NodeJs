@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Assistant</title>
+</head>
+<body>
+    <div id="chat"></div>
+    <input type="text" id="message">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:8080');
+        const chat = document.getElementById('chat');
+        const messageInput = document.getElementById('message');
+
+        ws.onmessage = (event) => {
+            const response = JSON.parse(event.data);
+            chat.innerHTML += '<p><strong>Assistant:</strong> ' + response.content + '</p>';
+        };
+
+        function sendMessage() {
+            const message = messageInput.value;
+            chat.innerHTML += '<p><strong>You:</strong> ' + message + '</p>';
+            ws.send(message);
+            messageInput.value = '';
+        }
+    </script>
+</body>
+</html>
